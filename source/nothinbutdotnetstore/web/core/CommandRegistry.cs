@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using nothinbutdotnetstore.infrastructure;
+using nothinbutdotnetstore.web.application.catalogbrowsing;
 using nothinbutdotnetstore.web.core.stubs;
 
 namespace nothinbutdotnetstore.web.core
@@ -10,7 +11,15 @@ namespace nothinbutdotnetstore.web.core
     IEnumerable<IProcessRequestInformation> process_request_commands;
     MissingCommandFactory missing_command_factory;
 
-    public CommandRegistry():this(Stub.with<StubSetOfCommands>(),
+    static List<IProcessRequestInformation> known_commands =
+        new List<IProcessRequestInformation>
+          {
+            new RequestCommand(x => true, new ViewMainDepartmentsInTheStore()),
+            new RequestCommand(x => true, new ViewTheDepartmentsInADepartment()),
+            new RequestCommand(x => true, new ViewProductsInADepartment())
+          };
+
+    public CommandRegistry():this(known_commands,
       Stub.with<StubMissingRequest>().create)
     {
     }
